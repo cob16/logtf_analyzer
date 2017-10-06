@@ -25,8 +25,6 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
     packages=[
         'logtf_analyser',
         'logtf_analyser_cli',
@@ -36,16 +34,15 @@ setup(
         'clint',
         'begins',
         'requests',
-        'furl',
     ],
 
     extras_require={
-        'test': ['nose', 'wiremock'],
+        'test': ['nose'],
     },
 
-        entry_points={
+    entry_points={
         'console_scripts': [
-            'logtf_analyser=logtf_analyser_cli.commands:logtf_analyser.start',
+            'logtf=logtf_analyser_cli.commands:logtf_analyser.start',
         ],
     },
 )

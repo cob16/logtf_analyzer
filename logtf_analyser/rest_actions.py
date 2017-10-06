@@ -10,7 +10,7 @@ def get_search_url():
     return F"{ENDPOINT}/json_search"
 
 
-def get_log_url():
+def get_log_url(log_id):
     return F"{ENDPOINT}/json/{log_id}"
 
 
@@ -36,6 +36,13 @@ def search_player(player=None, uploader=None, title=None, limit=1000):
     request = get(get_search_url(), params=params)
     request.raise_for_status()
     return request.json()
+
+
+def get_log(log_id):
+    request = get(get_log_url(log_id))
+    request.raise_for_status()
+    return request.json()
+
 
 def raise_for_nocontent(reply):
     if reply.status_code == 204:

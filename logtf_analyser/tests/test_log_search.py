@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from logtf_analyser.chat import get_ids
+from logtf_analyser.log_search import get_ids
 
 
-class TestChat(TestCase):
+class TestLogSearch(TestCase):
     def test_get_ids(self):
         array = get_ids(SEARCH_API_EXAMPLE)
         assert array == [1234567, 1234567, 1234567, 1234567, 1234567]
