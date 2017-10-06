@@ -34,6 +34,7 @@ setup(
         'clint',
         'begins',
         'requests',
+        'peewee'
     ],
 
     extras_require={

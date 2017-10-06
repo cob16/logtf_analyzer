@@ -1,6 +1,3 @@
-from logtf_analyser.logs.chat import Chat
-
-
 class ChatBuilder:
 
     def __init__(self, log_id, json_map, ignore_console=False):
@@ -16,6 +13,6 @@ class ChatBuilder:
             chat = filter(lambda chat_msg: chat_msg['steamid'] != 'Console', chat)
 
         for c in chat:
-            chat_array.append(Chat(self.log_id, c['steamid'], c['name'], c['msg']))
+            chat_array.append(dict(log_id=self.log_id, user_id=c['steamid'], username=c['name'], msg=c['msg']))
 
         return chat_array
