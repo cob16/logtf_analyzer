@@ -3,12 +3,12 @@ from time import sleep
 
 import begin
 from clint import resources
-from clint.textui import prompt, colored, progress
+from clint.textui import prompt, colored, progress, puts, indent
+from logtf_analyser.chatbuilder import ChatBuilder
 from peewee import SqliteDatabase
 
 from logtf_analyser.log_search import LogSearch
-from logtf_analyser.logs.model import db, Chat, bulk_add_chat, Log
-from logtf_analyser.logs.chatbuilder import ChatBuilder
+from logtf_analyser.model import db, Chat, bulk_add_chat, Log
 from logtf_analyser.rest_actions import search_logs, get_log
 
 URL_FILENAME = 'url'
@@ -16,18 +16,6 @@ AUTHTOKEN_FILENAME = 'token'
 MAX_LIMIT = 1000
 LOG_SIZE_KB = 1
 DB_INCREASE_KB = 6.666666666666667
-
-
-@begin.subcommand
-def init():
-    if prompt.options(colored.magenta("Create db?", bold=True), [
-        {'selector': 'y', 'prompt': 'Yes', 'return': True},
-        {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
-    ]):
-        db.connect()
-        db.create_tables([Chat, Log], safe=True)
-        logging.info(colored.green(F"Initialised database"))
-
 
 @begin.subcommand
 @begin.convert(limit=int, userid=int)
@@ -41,10 +29,10 @@ def user(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
         exit(2)
 
     logging.info(F"Querying latest {limit} logs for user {userid} from logs.tf...")
-    json = search_logs(player=userid, limit=limit)
-    logging.info(F"Got {json['results']} results")
-    logs = LogSearch().db_load(json)
-    logging.info(F"{logs.existing_logs} existing logs and {logs.newLogs} new logs")
+    logs = search_logs(player=userid, limit=limit)
+    logging.info(F"Got {len(logs)} results")
+    logs = LogSearch().db_load(logs)
+    logging.info(F"{len(logs.existing_logs)} existing logs and {len(logs.newLogs)} new logs")
     if logs.newLogs:
         prompt_options = [
             {'selector': 'y', 'prompt': 'Yes, to download all new logs', 'return': True},
@@ -75,12 +63,33 @@ def count():
 
 
 @begin.subcommand
-def list(username):
-    for c in Chat.select(Chat.msg).where(Chat.username == username).dicts():
-        print(c['msg'])
+@begin.convert(steam_id=int, search_str=str, count_only=bool)
+def show(steam_id=None, search_str=None, count_only: "get only count of results"=False):
+    query = Chat.select().join(Log)
+
+    if steam_id:
+        query = query.where(Chat.steam_id == steam_id)
+    if search_str:
+        query = query.where(Chat.msg.contains(search_str))
+
+    if count_only:
+        puts(colored.blue(str(query.count())))
+    else:
+        chat = query.order_by(Chat.log, Chat.order)
+
+        name_length = len(max(chat, key=lambda key: len(key.username)).username) + 1
+
+        log_id = 0
+        for index, c in enumerate(chat):
+            if log_id != c.log:
+                log_id = c.log
+                puts(colored.yellow(F"Log {c.log_id} {c.log.date}:"))
+            with indent(3):
+                with indent(name_length, quote=colored.blue(F'{c.username}')):
+                    puts(c.msg)
 
 
-@begin.start
+@begin.start(short_args=True)
 @begin.logging
 def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, dbname: 'Name of sqlite db'='chat.db'):
     """
@@ -89,6 +98,8 @@ def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, db
     Use [subcommand] -h to get information of a command
     """
     db.initialize(SqliteDatabase(dbname))
+    db.connect()
+    db.create_tables([Chat, Log], safe=True)
 
     return dict(ignore_console=ignore_console)
 

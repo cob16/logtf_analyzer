@@ -1,6 +1,4 @@
-import logging
-
-from logtf_analyser.logs.model import Log, db
+from logtf_analyser.model import Log, db
 
 
 class LogSearch:
@@ -9,8 +7,7 @@ class LogSearch:
         self.existing_logs = []
         self.newLogs = []
 
-    def db_load(self, json):
-        logs = json['logs']
+    def db_load(self, logs):
         assert logs
         with db.atomic():
             for l in logs:
@@ -19,3 +16,4 @@ class LogSearch:
                     self.newLogs.append(log)
                 else:
                     self.existing_logs.append(log)
+        return self

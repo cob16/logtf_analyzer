@@ -20,7 +20,7 @@ class Log(BaseModel):
 class Chat(BaseModel):
     log = ForeignKeyField(Log, related_name='chats')
     order = IntegerField()
-    user_id = CharField()
+    steam_id = IntegerField()
     username = CharField()
     msg = CharField()
 

@@ -1,7 +1,6 @@
 # coding=utf-8
 from requests import get
-
-from logtf_analyser_cli.utils import exit_and_fail
+import logging
 
 ENDPOINT = 'https://logs.tf'
 
@@ -14,7 +13,7 @@ def get_log_url(log_id):
     return F"{ENDPOINT}/json/{log_id}"
 
 
-def search_logs(player=None, uploader=None, title=None, limit=1000):
+def search_logs(player=None, uploader=None, title=None, limit=1000, full_json=False):
     """
     title	 Title text search
     uploader Uploader SteamID as 64-bit integer
@@ -23,7 +22,8 @@ def search_logs(player=None, uploader=None, title=None, limit=1000):
     """
 
     if not (player or uploader or title):
-        exit_and_fail('No params applied to search')
+        logging.critical('No params applied to search')
+        exit(2)
 
     params = {'limit': limit}
     if player:
@@ -36,6 +36,8 @@ def search_logs(player=None, uploader=None, title=None, limit=1000):
     request = get(get_search_url(), params=params)
     request.raise_for_status()
     request = request.json()
+    if full_json:
+        return request
     return request['logs']
 
 

@@ -38,7 +38,7 @@ setup(
     ],
 
     extras_require={
-        'test': ['nose'],
+        'test': ['nose', 'parameterized'],
     },
 
     entry_points={

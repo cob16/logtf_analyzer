@@ -3,7 +3,7 @@ from unittest import TestCase
 from peewee import SqliteDatabase
 
 from logtf_analyser.log_search import LogSearch
-from logtf_analyser.logs.model import Log, db
+from logtf_analyser.model import Log, db
 
 
 class TestLogSearch(TestCase):
@@ -17,7 +17,7 @@ class TestLogSearch(TestCase):
 
     def test_get_ids(self):
         logs = LogSearch()
-        logs.db_load(SEARCH_API_EXAMPLE)
+        logs.db_load(SEARCH_API_EXAMPLE['logs'])
         self.assertEqual(len(logs.existing_logs), 0)
         self.assertEqual(len(logs.newLogs), 5)
 

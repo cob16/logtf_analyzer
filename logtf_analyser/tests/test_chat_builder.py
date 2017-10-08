@@ -1,20 +1,32 @@
 from unittest import TestCase
 
-from logtf_analyser.logs.chatbuilder import ChatBuilder
+from logtf_analyser.chatbuilder import ChatBuilder, CONSOLE_MSG_ID_PLACEHOLDER
 
 
 class TestChatBuilder(TestCase):
-    def test_build(self):
-        log_id = 123456
-        chat_arary = ChatBuilder(log_id, EXMPLE_LOG).build()
-        assert len(chat_arary) == 26
+    def test_build_no_console_messages(self):
+        chat_arary = ChatBuilder(LOG_ID, EXMPLE_LOG, ignore_console=True).build()
+        self.assertEquals(len(chat_arary), 26)
 
-        assert chat_arary[0]['log_id'] == log_id
-        assert chat_arary[0]['order'] == 0
-        assert chat_arary[0]['username'] == 'Eternal'
-        assert chat_arary[0]['msg'] == 'ur mean'
+        self.assertEquals(chat_arary[0]['log'], LOG_ID)
+        self.assertEquals(chat_arary[0]['order'], 1)
+        self.assertEquals(chat_arary[0]['steam_id'], 76561198122554260)
+        self.assertEquals(chat_arary[0]['username'], 'Eternal')
+        self.assertEquals(chat_arary[0]['msg'], 'ur mean')
 
-        assert chat_arary[1]['order'] == 1
+        self.assertEquals(chat_arary[1]['order'], 2)
+
+    def test_build_with_console_messages(self):
+        chat_arary = ChatBuilder(LOG_ID, EXMPLE_LOG, ignore_console=False).build()
+
+        self.assertEquals(chat_arary[0]['log'], LOG_ID)
+        self.assertEquals(chat_arary[0]['steam_id'], CONSOLE_MSG_ID_PLACEHOLDER)
+        self.assertEquals(chat_arary[0]['order'], 0)
+        self.assertEquals(chat_arary[0]['username'], 'Console')
+        self.assertEquals(chat_arary[0]['msg'], 'set map')
+
+
+LOG_ID = 123456
 
 EXMPLE_LOG = {
     "version": 3,
@@ -2532,6 +2544,11 @@ EXMPLE_LOG = {
         }
     },
     "chat": [
+        {
+            "steamid": "Console",
+            "name": "Console",
+            "msg": "set map"
+        },
         {
             "steamid": "[U:1:162288532]",
             "name": "Eternal",
