@@ -12,7 +12,9 @@ class ChatBuilder:
         if self.ignore_console_messages:
             chat = filter(lambda chat_msg: chat_msg['steamid'] != 'Console', chat)
 
-        for c in chat:
-            chat_array.append(dict(log_id=self.log_id, user_id=c['steamid'], username=c['name'], msg=c['msg']))
+        for idx, c in enumerate(chat):
+            chat_array.append(
+                dict(log_id=self.log_id, order=idx, user_id=c['steamid'], username=c['name'], msg=c['msg'])
+            )
 
         return chat_array

@@ -14,7 +14,7 @@ def get_log_url(log_id):
     return F"{ENDPOINT}/json/{log_id}"
 
 
-def search_player(player=None, uploader=None, title=None, limit=1000):
+def search_logs(player=None, uploader=None, title=None, limit=1000):
     """
     title	 Title text search
     uploader Uploader SteamID as 64-bit integer
@@ -35,7 +35,8 @@ def search_player(player=None, uploader=None, title=None, limit=1000):
 
     request = get(get_search_url(), params=params)
     request.raise_for_status()
-    return request.json()
+    request = request.json()
+    return request['logs']
 
 
 def get_log(log_id):

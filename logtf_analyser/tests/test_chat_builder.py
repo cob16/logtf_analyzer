@@ -9,11 +9,12 @@ class TestChatBuilder(TestCase):
         chat_arary = ChatBuilder(log_id, EXMPLE_LOG).build()
         assert len(chat_arary) == 26
 
-        assert chat_arary[0].log_id == log_id
-        assert chat_arary[0].user_id == '[U:1:162288532]'
-        assert chat_arary[0].username == 'Eternal'
-        assert chat_arary[0].msg == 'ur mean'
+        assert chat_arary[0]['log_id'] == log_id
+        assert chat_arary[0]['order'] == 0
+        assert chat_arary[0]['username'] == 'Eternal'
+        assert chat_arary[0]['msg'] == 'ur mean'
 
+        assert chat_arary[1]['order'] == 1
 
 EXMPLE_LOG = {
     "version": 3,

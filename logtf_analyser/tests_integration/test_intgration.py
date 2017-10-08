@@ -8,7 +8,7 @@ class integration_tests(TestCase):
     real_id = None
 
     def test_search(self):
-        result = actions.search_player(player=76561198001536710, limit=5)
+        result = actions.search_logs(player=76561198001536710, limit=5)
         self.assertEquals(result["results"], 5)
         self.assertEquals(result["success"], True)
         self.assertEquals(len(result["logs"]), 5)

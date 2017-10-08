@@ -3,17 +3,19 @@ from time import sleep
 
 import begin
 from clint import resources
-from clint.textui import prompt, puts, colored, progress
+from clint.textui import prompt, colored, progress
+from peewee import SqliteDatabase
 
-from logtf_analyser.log_search import get_ids
-from logtf_analyser.logs.chat import db, Chat, bulk_add_users
+from logtf_analyser.log_search import LogSearch
+from logtf_analyser.logs.model import db, Chat, bulk_add_chat, Log
 from logtf_analyser.logs.chatbuilder import ChatBuilder
-from logtf_analyser.rest_actions import search_player, get_log
+from logtf_analyser.rest_actions import search_logs, get_log
 
 URL_FILENAME = 'url'
 AUTHTOKEN_FILENAME = 'token'
 MAX_LIMIT = 1000
-AVERAGE_DB_SIZE_DELTA_PER_LOG = 6.666666666666667
+LOG_SIZE_KB = 1
+DB_INCREASE_KB = 6.666666666666667
 
 
 @begin.subcommand
@@ -23,7 +25,7 @@ def init():
         {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
     ]):
         db.connect()
-        db.create_tables([Chat], safe=True)
+        db.create_tables([Chat, Log], safe=True)
         logging.info(colored.green(F"Initialised database"))
 
 
@@ -34,35 +36,43 @@ def user(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
     """
     Get chat logs of the user
     """
-    if limit <= MAX_LIMIT:
-        logging.info(F"Querying latest {limit} logs for user {userid} from logs.tf...")
-        results = search_player(player=userid, limit=limit)
-        logging.info(F"Parsing log ids")
-        log_ids = get_ids(results)
-        log_number = len(log_ids)
-        logging.info(F"Received {log_number} logs from search")
-        if log_number:
-            prompt_options = [
-                {'selector': 'y', 'prompt': 'Yes, to download all logs', 'return': True},
-                {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
-            ]
-            # todo fix this line
-            if prompt.options(colored.magenta(F"Download {log_number} logs? \nThis will download aprox {0}KB of data and commit aprox {log_number * AVERAGE_DB_SIZE_DELTA_PER_LOG}KB to DB", bold=True), prompt_options):
-                for id in progress.bar(log_ids):
-                    logging.debug(colored.yellow(id))
-                    result = get_log(id)
-                    chat_messages = ChatBuilder(id, result, ignore_console=parent['ignore_console']).build()
-                    bulk_add_users(chat_messages)
-                    logging.info(colored.green(F"Saved {len(chat_messages)} to DB"))
-                    sleep(1)
-                logging.info(colored.green("Successfully downloaded all logs!"))
-    else:
-        logging.error(colored.red(F"Limit is set over MAX_LIMIT of {MAX_LIMIT}", bold=True))
+    if limit > MAX_LIMIT:
+        logging.critical(colored.red(F"Limit is set over MAX_LIMIT of {MAX_LIMIT}", bold=True))
+        exit(2)
+
+    logging.info(F"Querying latest {limit} logs for user {userid} from logs.tf...")
+    json = search_logs(player=userid, limit=limit)
+    logging.info(F"Got {json['results']} results")
+    logs = LogSearch().db_load(json)
+    logging.info(F"{logs.existing_logs} existing logs and {logs.newLogs} new logs")
+    if logs.newLogs:
+        prompt_options = [
+            {'selector': 'y', 'prompt': 'Yes, to download all new logs', 'return': True},
+            {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
+        ]
+        if prompt.options(colored.magenta(
+                        F"Download {len(logs.newLogs)} logs? \nThis will download aprox {round(len(logs.newLogs) * LOG_SIZE_KB, 3)}KB of data " +
+                        F"and commit aprox {round(len(logs.newLogs) * DB_INCREASE_KB, 3)}KB to DB",
+                bold=True), prompt_options):
+            download_chat_logs(logs.newLogs, parent['ignore_console'])
+            logging.info(colored.green("Successfully downloaded all logs!"))
+
+
+def download_chat_logs(logs, ignore_console):
+    for log in progress.bar(logs):
+        logging.debug(colored.yellow(F"Downloading chat for {log.log_id}"))
+        result = get_log(log.log_id)
+        assert result
+        chat_messages = ChatBuilder(log.log_id, result, ignore_console=ignore_console).build()
+        bulk_add_chat(chat_messages)
+        logging.debug(colored.green(F"Saved {len(chat_messages)} to DB"))
+        sleep(1)
 
 
 @begin.subcommand
 def count():
     print(Chat.select().count())
+
 
 @begin.subcommand
 def list(username):
@@ -72,21 +82,14 @@ def list(username):
 
 @begin.start
 @begin.logging
-def logtf_analyser(ignore_console: 'ignore chat made by the console' = False):
+def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, dbname: 'Name of sqlite db'='chat.db'):
     """
     Sends and receives broadcasts (multi social network posts) from a server.
 
     Use [subcommand] -h to get information of a command
     """
-    # sys.path.insert(0, os.path.abspath('..'))
-    # resources.init('cbrady', 'broadcasts_cli')
+    db.initialize(SqliteDatabase(dbname))
 
-    # action = RestActions(return_raw=raw, url=url)  # create our instance
-    #
-    # # need the action instance for this one
-    # if auth_token is None:
-    #     set_authtoken(interactive, action)
-    #
     return dict(ignore_console=ignore_console)
 
 
