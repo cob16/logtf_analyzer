@@ -31,4 +31,5 @@ class Chat(BaseModel):
 
 def bulk_add_chat(chat_array_of_dicts):
     with db.atomic():
-        Chat.insert_many(chat_array_of_dicts).execute()
+        for idx in range(0, len(chat_array_of_dicts), 100):
+            Chat.insert_many(chat_array_of_dicts[idx:idx + 100]).execute()
