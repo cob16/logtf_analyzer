@@ -61,11 +61,24 @@ def download_chat_logs(logs, ignore_console):
 def count():
     print(Chat.select().count())
 
+@begin.subcommand
+def prune():
+    # Log.create(log_id=0, date=0, title='fake')
+    # print(Log.select(Log, Chat).where(Log.log_id not in Chat).count())
+    # print(Log.select().where(Log.chats.count() == 0))
+    results = Log.select().where(
+        Log.log_id.not_in(
+            Chat.select(Chat.log)
+        )
+    )
+    for r in results.dicts():
+        print(r)
+
 
 @begin.subcommand
 @begin.convert(steam_id=int, search_str=str, count_only=bool)
 def show(steam_id=None, search_str=None, count_only: "get only count of results"=False):
-    query = Chat.select().join(Log)
+    query = Chat.select(Log.log_id, Log.date, Log.title, Chat.msg, Chat.username).join(Log)
 
     if steam_id:
         query = query.where(Chat.steam_id == steam_id)
