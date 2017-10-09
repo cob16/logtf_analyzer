@@ -17,9 +17,10 @@ MAX_LIMIT = 1000
 LOG_SIZE_KB = 1
 DB_INCREASE_KB = 6.666666666666667
 
+
 @begin.subcommand
 @begin.convert(limit=int, userid=int)
-def user(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
+def download(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
     parent = begin.context.last_return
     """
     Get chat logs of the user
@@ -54,30 +55,27 @@ def download_chat_logs(logs, ignore_console):
         chat_messages = ChatBuilder(log.log_id, result, ignore_console=ignore_console).build()
         bulk_add_chat(chat_messages)
         logging.debug(colored.green(F"Saved {len(chat_messages)} to DB"))
-        sleep(1)
 
 
 @begin.subcommand
 def count():
     print(Chat.select().count())
 
+
 @begin.subcommand
 def prune():
-    # Log.create(log_id=0, date=0, title='fake')
-    # print(Log.select(Log, Chat).where(Log.log_id not in Chat).count())
-    # print(Log.select().where(Log.chats.count() == 0))
-    results = Log.select().where(
+    query = Log.delete().where(
         Log.log_id.not_in(
             Chat.select(Chat.log)
         )
     )
-    for r in results.dicts():
-        print(r)
+    deleted_rows = query.execute()
+    logging.info(colored.red(F"Deleted {deleted_rows} logs"))
 
 
 @begin.subcommand
 @begin.convert(steam_id=int, search_str=str, count_only=bool)
-def show(steam_id=None, search_str=None, count_only: "get only count of results"=False):
+def show(steam_id=None, search_str=None, count_only: "get only count of results" = False):
     query = Chat.select(Log.log_id, Log.date, Log.title, Chat.msg, Chat.username).join(Log)
 
     if steam_id:
@@ -104,7 +102,7 @@ def show(steam_id=None, search_str=None, count_only: "get only count of results"
 
 @begin.start(short_args=True)
 @begin.logging
-def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, dbname: 'Name of sqlite db'='chat.db'):
+def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, dbname: 'Name of sqlite db' = 'chat.db'):
     """
     Sends and receives broadcasts (multi social network posts) from a server.
 
@@ -115,17 +113,3 @@ def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, db
     db.create_tables([Chat, Log], safe=True)
 
     return dict(ignore_console=ignore_console)
-
-
-def get_config(filename):
-    """ try to find config file else return None """
-    return resources.user.read(filename)  # try to find config file
-
-# def use_pipe():
-#     '''this function is run from the shell'''
-#     # use care here as it steels the stdin"
-#     _in_data = piped_in()
-#     if _in_data:
-#         puts(colored.red('Data was piped in this will be used as the message body'))
-#     else:
-#         print(colored.green('started'))
