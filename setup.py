@@ -1,10 +1,8 @@
-import sys
 from setuptools import setup
 
-if sys.version_info.major < 3:
-    sys.stderr.write("This package was made with Python 3. Continue at your own risk! \n")
-
 setup(
+    python_requires='>=3',
+
     name='logtf_analyser',
 
     version='0.2.0',
