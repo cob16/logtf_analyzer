@@ -5,16 +5,16 @@ if sys.version_info.major < 3:
     sys.stderr.write("This package was made with Python 3. Continue at your own risk! \n")
 
 setup(
-    name='logtf_analyser_cli',
+    name='logtf_analyser',
 
-    version='0.1',
+    version='0.2',
 
-    description='Logs.tf chat analyser',
+    description='logtf_analyser is a cli app to download and query chat logs from Logs.tf. SQLite is required',
 
-    # The project's main homepage.
-    # url='https://github.com/pypa/sampleproject',
+    url='https://github.com/cob16/tflog_analyzer',
 
-    author='cormac brady',
+    author='Cormac Brady',
+
     author_email='cormac.brady@hotmail.co.uk',
 
     license='MIT',

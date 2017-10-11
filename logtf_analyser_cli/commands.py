@@ -1,12 +1,10 @@
 import logging
-from time import sleep
 
 import begin
-from clint import resources
 from clint.textui import prompt, colored, progress, puts, indent
-from logtf_analyser.chatbuilder import ChatBuilder
 from peewee import SqliteDatabase
 
+from logtf_analyser.chatbuilder import ChatBuilder
 from logtf_analyser.log_search import LogSearch
 from logtf_analyser.model import db, Chat, bulk_add_chat, Log
 from logtf_analyser.rest_actions import search_logs, get_log
