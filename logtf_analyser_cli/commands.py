@@ -12,8 +12,6 @@ from logtf_analyser.rest_actions import search_logs, get_log
 URL_FILENAME = 'url'
 AUTHTOKEN_FILENAME = 'token'
 MAX_LIMIT = 1000
-LOG_SIZE_KB = 1
-DB_INCREASE_KB = 6.666666666666667
 
 
 @begin.subcommand
@@ -47,9 +45,7 @@ def download_prompt(num_new_logs: int):
         {'selector': 'y', 'prompt': 'Yes, to download all new logs', 'return': True},
         {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
     ]
-    prompt_msg = F"Download {num_new_logs} logs? " \
-                 F"\nThis will download aprox {round(num_new_logs * LOG_SIZE_KB, 3)}" \
-                 F"KB of data and commit aprox {round(num_new_logs * DB_INCREASE_KB, 3)}KB to DB "
+    prompt_msg = F"Download {num_new_logs} logs?"
     return prompt.options(colored.magenta(prompt_msg, bold=True), prompt_options)
 
 
@@ -92,7 +88,6 @@ def chat(steam_id=None, search_str=None, count_only: "get only count of results"
         query = query.where(Chat.steam_id == steam_id)
     if search_str:
         query = query.where(Chat.msg.contains(search_str))
-
     if count_only:
         puts(colored.blue(str(query.count())))
     else:
