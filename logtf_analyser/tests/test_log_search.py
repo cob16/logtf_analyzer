@@ -24,6 +24,11 @@ class TestLogSearch(TestCase):
         for index, log in enumerate(logs.newLogs):
             self.assertEqual(log.log_id, index)
 
+    def test_get_ids_works_if_empty(self):
+            logs = LogSearch().db_load([])
+            self.assertEqual(len(logs.existing_logs), 0)
+            self.assertEqual(len(logs.newLogs), 0)
+
 
 SEARCH_API_EXAMPLE = {
     "logs": [

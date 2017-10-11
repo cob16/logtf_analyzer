@@ -22,6 +22,12 @@ class integration_tests(TestCase):
                 self.assertEquals(len(str(log['id'])),  7)
                 self.assertIsNotNone(datetime.datetime.fromtimestamp(log['date']).day)
 
+    def test_search__no_results_null(self):
+        result = actions.search_logs(player=1, limit=5, full_json=True)
+        self.assertEquals(result["results"], 0)
+        self.assertEquals(result["success"], True)
+        self.assertEquals(len(result["logs"]), 0)
+
     def test_get_log(self):
         result = actions.get_log(1851423)
         self.assertEquals(result["version"], 3)

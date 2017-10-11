@@ -8,7 +8,6 @@ class LogSearch:
         self.newLogs = []
 
     def db_load(self, logs):
-        assert logs
         with db.atomic():
             for l in logs:
                 log, created = Log.get_or_create(log_id=l['id'], defaults={'date': l['date'], 'title': l['title']})
