@@ -9,7 +9,7 @@ def convert_id3_to_id64(steamid: str) -> int:
         raise TypeError('steamid must be a string')
 
     if PREFIX not in steamid or ']' not in steamid[-1]:
-        raise ValueError(F"Expected steam id3 string such as [U:1:22202] instead got {steamid}")
+        raise ValueError(f"Expected steam id3 string such as [U:1:22202] instead got {steamid}")
 
     u_index = steamid.find(PREFIX)
     steamid = steamid[u_index + len(PREFIX):-1]

@@ -22,16 +22,16 @@ def download(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
     Get chat logs of the user
     """
     if limit > MAX_LIMIT:
-        logging.critical(colored.red(F"Limit is set over MAX_LIMIT of {MAX_LIMIT}", bold=True))
+        logging.critical(colored.red(f"Limit is set over MAX_LIMIT of {MAX_LIMIT}", bold=True))
         exit(2)
 
-    logging.info(F"Querying latest {limit} logs for user {userid} from logs.tf...")
+    logging.info(f"Querying latest {limit} logs for user {userid} from logs.tf...")
     with db.atomic():
         with db.savepoint() as save:
             logs = search_logs(player=userid, limit=limit)
-            logging.info(F"Got {len(logs)} results")
+            logging.info(f"Got {len(logs)} results")
             logs = LogSearch().db_load(logs)
-            logging.info(F"{len(logs.existing_logs)} existing logs and {len(logs.newLogs)} new logs")
+            logging.info(f"{len(logs.existing_logs)} existing logs and {len(logs.newLogs)} new logs")
             if logs.newLogs:
                 if download_prompt(len(logs.newLogs)):
                     download_chat_logs(logs.newLogs, parent['ignore_console'])
@@ -45,18 +45,18 @@ def download_prompt(num_new_logs: int):
         {'selector': 'y', 'prompt': 'Yes, to download all new logs', 'return': True},
         {'selector': 'n', 'prompt': 'No, and exit program', 'return': False}
     ]
-    prompt_msg = F"Download {num_new_logs} logs?"
+    prompt_msg = f"Download {num_new_logs} logs?"
     return prompt.options(colored.magenta(prompt_msg, bold=True), prompt_options)
 
 
 def download_chat_logs(logs, ignore_console):
     for log in progress.bar(logs):
-        logging.debug(colored.yellow(F"Downloading chat for {log.log_id}"))
+        logging.debug(colored.yellow(f"Downloading chat for {log.log_id}"))
         result = get_log(log.log_id)
         assert result
         chat_messages = ChatBuilder(log.log_id, result, ignore_console=ignore_console).build()
         bulk_add_chat(chat_messages)
-        logging.debug(colored.green(F"Saved {len(chat_messages)} to DB"))
+        logging.debug(colored.green(f"Saved {len(chat_messages)} to DB"))
 
 
 @begin.subcommand
@@ -67,7 +67,7 @@ def count():
 @begin.subcommand
 def prune():
     deleted_rows = _prune_query().execute()
-    logging.info(colored.red(F"Deleted {deleted_rows} logs"))
+    logging.info(colored.red(f"Deleted {deleted_rows} logs"))
 
 
 def _prune_query():
@@ -99,7 +99,7 @@ def chat(steam_id=None, search_str=None, count_only: "get only count of results"
         for index, c in enumerate(chat):
             if log_id != c.log:
                 log_id = c.log
-                puts(colored.yellow(F"Log {c.log_id} {c.log.date}:"))
+                puts(colored.yellow(f"Log {c.log_id} {c.log.date}:"))
             with indent(3):
                 with indent(name_length, quote=colored.blue(F'{c.username}')):
                     puts(c.msg)
