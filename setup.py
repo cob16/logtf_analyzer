@@ -1,13 +1,19 @@
+import os
 from setuptools import setup
+
+with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
+    long_description = readme.read()
 
 setup(
     python_requires='>=3',
 
     name='logtf_analyser',
 
-    version='0.2.0',
+    version='0.2.2',
 
-    description='logtf_analyser is a cli app to download and query chat logs from Logs.tf. SQLite is required',
+    description='Downland and search chat logs from logs.tf',
+
+    long_description=long_description,
 
     url='https://github.com/cob16/tflog_analyzer',
 
