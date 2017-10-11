@@ -7,7 +7,7 @@ if sys.version_info.major < 3:
 setup(
     name='logtf_analyser',
 
-    version='0.2',
+    version='0.2.0',
 
     description='logtf_analyser is a cli app to download and query chat logs from Logs.tf. SQLite is required',
 
