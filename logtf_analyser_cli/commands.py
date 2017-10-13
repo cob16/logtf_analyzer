@@ -16,8 +16,9 @@ MAX_LIMIT = 1000
 
 @begin.subcommand
 @begin.convert(limit=int, userid=int)
-def download(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
-    parent = begin.context.last_return
+def download(userid: 'Steam User Id64',
+             limit: 'Number or logs to get' = 5,
+             ignore_console: 'ignore chat made by the console' = False):
     """
     Get chat logs of the user
     """
@@ -34,7 +35,7 @@ def download(userid: 'Steam User Id64', limit: 'Number or logs to get' = 5):
             logging.info(f"{len(logs.existing_logs)} existing logs and {len(logs.newLogs)} new logs")
             if logs.newLogs:
                 if download_prompt(len(logs.newLogs)):
-                    download_chat_logs(logs.newLogs, parent['ignore_console'])
+                    download_chat_logs(logs.newLogs, ignore_console)
                     logging.info(colored.green("Successfully downloaded all logs!"))
                 else:
                     save.rollback()
@@ -105,16 +106,14 @@ def chat(steam_id=None, search_str=None, count_only: "get only count of results"
                     puts(c.msg)
 
 
-@begin.start(short_args=True)
+@begin.start(auto_convert=True, short_args=True)
 @begin.logging
-def logtf_analyser(ignore_console: 'ignore chat made by the console' = False, dbname: 'Name of sqlite db' = 'chat.db'):
+def logtf_analyser(subcommand, dbname: 'Name of sqlite db' = 'chat.db'):
     """
-    Sends and receives broadcasts (multi social network posts) from a server.
+    Downloads tf2 chat from logs.tf into a db and provides search.
 
     Use [subcommand] -h to get information of a command
     """
     db.initialize(SqliteDatabase(dbname))
     db.connect()
     db.create_tables([Chat, Log], safe=True)
-
-    return dict(ignore_console=ignore_console)
