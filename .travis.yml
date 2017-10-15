@@ -1,7 +1,6 @@
 language: python
 python:
   - "3.6"
-  - "pypy3"
 install:
   - pip install .[test]
-script: nosetests
+script: nosetests --verbosity=3 --with-xunit
