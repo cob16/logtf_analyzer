@@ -4,7 +4,7 @@ python:
 - '3.5'
 install:
 - pip install .[test,deploy]
-script: nosetests --verbosity=3 --with-xunit
+script: nosetests --verbosity=3
 before_deploy: python setup.py check -rs #check we have valid rst
 deploy:
   on:
