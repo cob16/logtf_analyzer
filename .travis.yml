@@ -1,7 +1,7 @@
 language: python
 cache: pip
 python:
-- '3.6'
+- '3.5'
 install:
 - pip install .[test,deploy]
 script: nosetests --verbosity=3 --with-xunit
