@@ -43,6 +43,7 @@ setup(
 
     extras_require={
         'test': ['nose', 'parameterized'],
+        'deploy': ['docutils', 'Pygments'],
     },
 
     entry_points={

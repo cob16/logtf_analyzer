@@ -2,7 +2,7 @@ language: python
 python:
 - '3.6'
 install:
-- pip install .[test]
+- pip install .[test,deploy]
 script: nosetests --verbosity=3 --with-xunit
 before_deploy: python setup.py check -rs #check we have valid rst
 deploy:
