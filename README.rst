@@ -4,7 +4,7 @@ Log.tf Analyser
 |Build Status|
 
 logtf\_analyser is a cli app to download and query chat logs from
-Logs.tf.
+`Logs.tf <https://logs.tf/>`__.
 
 **SQLite is required**
 
@@ -18,19 +18,23 @@ Install
 Examples
 ~~~~~~~~
 
-Get the last 12 logs of a player
-''''''''''''''''''''''''''''''''
+Download the last 12 logs of a player
+'''''''''''''''''''''''''''''''''''''
+
+This will download and load all selected chat logs into a sql lite db.
+This will ignore any pre-existing logs.
 
 .. code:: bash
 
-    logtf download -l 12 76561197960287930
+    $ logtf download -l 12 76561197960287930
 
 Get number of 'gg's
 '''''''''''''''''''
 
 .. code:: bash
 
-    logtf chat --count-only --steam-id 76561197960287930 --search-str "gg"
+    $ logtf chat --count-only --steam-id 76561197960287930 --search-str "gg"
+    12
 
 Usage
 ~~~~~
@@ -38,19 +42,19 @@ Usage
 .. code:: bash
 
     usage: logtf [-h] [-v | -q] [--loglvl {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                 [--logfile LOGFILE] [--logfmt LOGFMT] [--ignore-console]
-                 [--no-ignore-console] [--dbname DBNAME]
-                 {chat,count,download,prune} ...
+                 [--logfile LOGFILE] [--logfmt LOGFMT] [--dbname DBNAME]
+                 {chat,count,download,prune} ... SUBCOMMAND
 
-    Sends and receives broadcasts (multi social network posts) from a server. Use
+    Downloads tf2 chat from logs.tf into a db and provides search. Use
     [subcommand] -h to get information of a command
+
+    positional arguments:
+      SUBCOMMAND
 
     optional arguments:
       -h, --help            show this help message and exit
       -v, --verbose         Increse logging output
       -q, --quiet           Decrease logging output
-      --ignore-console      ignore chat made by the console (default: False)
-      --no-ignore-console
       --dbname DBNAME, -d DBNAME
                             Name of sqlite db (default: chat.db)
 
