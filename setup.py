@@ -9,7 +9,7 @@ setup(
 
     name='logtf_analyser',
 
-    version='0.2.4',
+    version='0.2.5',
 
     description='Downland and search chat logs from logs.tf',
 
