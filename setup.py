@@ -9,7 +9,7 @@ setup(
 
     name='logtf_analyser',
 
-    version='0.2.3',
+    version='0.2.4',
 
     description='Downland and search chat logs from logs.tf',
 
@@ -43,6 +43,7 @@ setup(
 
     extras_require={
         'test': ['nose', 'parameterized'],
+        'deploy': ['docutils', 'Pygments'],
     },
 
     entry_points={

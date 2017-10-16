@@ -6,11 +6,11 @@ ENDPOINT = 'https://logs.tf'
 
 
 def get_search_url():
-    return f"{ENDPOINT}/json_search"
+    return "{}/json_search".format(ENDPOINT)
 
 
 def get_log_url(log_id):
-    return f"{ENDPOINT}/json/{log_id}"
+    return "{}/json/{}".format(ENDPOINT, log_id)
 
 
 def search_logs(player=None, uploader=None, title=None, limit=1000, full_json=False):

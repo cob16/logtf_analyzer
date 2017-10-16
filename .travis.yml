@@ -1,6 +1,16 @@
 language: python
+cache: pip
 python:
-  - "3.6"
+- '3.5'
 install:
-  - pip install .[test]
-script: nosetests --verbosity=3 --with-xunit
+- pip install .[test,deploy]
+script: nosetests --verbosity=3
+before_deploy: python setup.py check -rs #check we have valid rst
+deploy:
+  on:
+    tags: true
+    branch: master
+  provider: pypi
+  user: cob16
+  password:
+    secure: Eo3wLvSU7WOPNxFSa0aNc0sKsWVmgcbOinSpBAiCMBKNvu9sjU3Li2HWG2HH/yKdNec4Xdj3Bg2ePumZLJuYHcd6BL0uFRN0i4l8F7krq7XNqfdFuV0/5g/Eiaom0euw32jR3ZExyJjGBCOYKe53cbHZ938j1IRhvJqu/hxcXK4N91AVm1tP4uLhF9HPRc+b2unksHmZ1XL9xI7DLipCxXBgE9eoNS55kParQSmHn2J/2vpmuqsyFZh2Vl4U4OvL0QwzUouHPY+4pNE1a018C/QVLVkGQujhho3JIipY2dbH1FWBHHlsmDn9qSyn87St9sk2QY3X7ndOFIQyQJ3J6NQmg+ELscLBrbLR56eUGCV9ZhNerHAnhHpzGOO/LNo5i54fedx63TagFygEizb3NjFgBKK2mqTHrGKVzFHNYKPSqmIEpAF98fAkRXuK0kz/FiHCHZMOL9oAok85XlmUT8N3yR+KbWIhAbqqAtnlcufZJRZSfMSl3Eq8h0s0WzUyyGfPKEFrHDryhXRLXmNPefoI9uZ/OlitWteq5Ca0oNnlq0VBrGFy2mFfzF9p9LHkxnzBMFXkOfnF3dmqnDn6qc/WjvvAXs/yOgOS8tpAAx6x8Kx438H0eQ2vzJcLfH+WvjoId9jpbbbhCxr+0yFx2pMYwET8vxfPRR7sMLYnKtQ=

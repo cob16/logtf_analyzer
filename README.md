@@ -1,7 +1,7 @@
 # Log.tf Analyser
 [![Build Status](https://travis-ci.org/cob16/tflog_analyzer.svg?branch=master)](https://travis-ci.org/cob16/tflog_analyzer)
 
-logtf_analyser is a cli app to download and query chat logs from Logs.tf.
+logtf_analyser is a cli app to download and query chat logs from [Logs.tf](https://logs.tf/).
 
 **SQLite is required**
 
@@ -12,32 +12,35 @@ pip install logtf_analyser
 ```
 
 ### Examples
-##### Get the last 12 logs of a player
+##### Download the last 12 logs of a player
+This will download and load all selected chat logs into a sql lite db.
+This will ignore any pre-existing logs.
 ```bash
-logtf download -l 12 76561197960287930
+$ logtf download -l 12 76561197960287930
 ```
 
 ##### Get number of 'gg's
 ```bash
-logtf chat --count-only --steam-id 76561197960287930 --search-str "gg"
+$ logtf chat --count-only --steam-id 76561197960287930 --search-str "gg"
+12
 ```
 
 ### Usage
 ```bash
 usage: logtf [-h] [-v | -q] [--loglvl {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-             [--logfile LOGFILE] [--logfmt LOGFMT] [--ignore-console]
-             [--no-ignore-console] [--dbname DBNAME]
-             {chat,count,download,prune} ...
+             [--logfile LOGFILE] [--logfmt LOGFMT] [--dbname DBNAME]
+             {chat,count,download,prune} ... SUBCOMMAND
 
-Sends and receives broadcasts (multi social network posts) from a server. Use
+Downloads tf2 chat from logs.tf into a db and provides search. Use
 [subcommand] -h to get information of a command
+
+positional arguments:
+  SUBCOMMAND
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         Increse logging output
   -q, --quiet           Decrease logging output
-  --ignore-console      ignore chat made by the console (default: False)
-  --no-ignore-console
   --dbname DBNAME, -d DBNAME
                         Name of sqlite db (default: chat.db)
 
