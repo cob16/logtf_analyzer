@@ -15,7 +15,7 @@ setup(
 
     long_description=long_description,
 
-    url='https://github.com/cob16/tflog_analyzer',
+    url='https://github.com/cob16/logtf_analyzer/',
 
     author='Cormac Brady',
 
