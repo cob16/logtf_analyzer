@@ -108,7 +108,7 @@ def chat(steam_id=None, search_str=None, count_only: "get only count of results"
 
 @begin.start(auto_convert=True, short_args=True)
 @begin.logging
-def logtf_analyser(subcommand, dbname: 'Name of sqlite db' = 'chat.db'):  #subcommand arg used to force a subcommand
+def logtf_analyser(*subcommands, dbname: 'Name of sqlite db' = 'chat.db'):
     """
     Downloads tf2 chat from logs.tf into a db and provides search.
 
