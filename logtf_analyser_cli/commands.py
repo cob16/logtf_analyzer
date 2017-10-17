@@ -61,8 +61,19 @@ def download_chat_logs(logs, ignore_console):
 
 
 @begin.subcommand
-def count():
-    print(Chat.select().count())
+def info():
+    """
+    Get database statistics
+    """
+    counts = {
+        'Logs':  Log.select().count(),
+        'Users': Chat.select(Chat.steam_id).distinct().count(),
+        'Chats': Chat.select().count(),
+    }
+    puts(colored.blue('Current DB contains:'))
+    for name, value in counts.items():
+        with indent(6, quote=colored.blue(name)):
+            puts(str(value))
 
 
 @begin.subcommand
