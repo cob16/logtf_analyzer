@@ -61,8 +61,19 @@ def download_chat_logs(logs, ignore_console):
 
 
 @begin.subcommand
-def count():
-    print(Chat.select().count())
+def info():
+    """
+    Get database statistics
+    """
+    counts = {
+        'Logs':  Log.select().count(),
+        'Users': Chat.select(Chat.steam_id).distinct().count(),
+        'Chats': Chat.select().count(),
+    }
+    puts(colored.blue('Current DB contains:'))
+    for name, value in counts.items():
+        with indent(6, quote=colored.blue(name)):
+            puts(str(value))
 
 
 @begin.subcommand
@@ -108,7 +119,7 @@ def chat(steam_id=None, search_str=None, count_only: "get only count of results"
 
 @begin.start(auto_convert=True, short_args=True)
 @begin.logging
-def logtf_analyser(subcommand, dbname: 'Name of sqlite db' = 'chat.db'):  #subcommand arg used to force a subcommand
+def logtf_analyser(*subcommands, dbname: 'Name of sqlite db' = 'chat.db'):
     """
     Downloads tf2 chat from logs.tf into a db and provides search.
 

@@ -9,13 +9,13 @@ setup(
 
     name='logtf_analyser',
 
-    version='0.2.4',
+    version='0.3.0',
 
     description='Downland and search chat logs from logs.tf',
 
     long_description=long_description,
 
-    url='https://github.com/cob16/tflog_analyzer',
+    url='https://github.com/cob16/logtf_analyzer/',
 
     author='Cormac Brady',
 
