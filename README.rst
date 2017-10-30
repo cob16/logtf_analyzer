@@ -73,5 +73,5 @@ Usage
       --logfile LOGFILE     Ouput log messages to file
       --logfmt LOGFMT       Log message format
 
-.. |Build Status| image:: https://travis-ci.org/cob16/tflog_analyzer.svg?branch=master
-   :target: https://travis-ci.org/cob16/tflog_analyzer
+.. |Build Status| image:: https://travis-ci.org/cob16/logtf_analyzer.svg?branch=master
+   :target: https://travis-ci.org/cob16/logtf_analyzer
