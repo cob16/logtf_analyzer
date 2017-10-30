@@ -29,13 +29,13 @@ $ logtf chat --count-only --steam-id 76561197960287930 --search-str "gg"
 ```bash
 usage: logtf [-h] [-v | -q] [--loglvl {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
              [--logfile LOGFILE] [--logfmt LOGFMT] [--dbname DBNAME]
-             {chat,count,download,prune} ... SUBCOMMAND
+             {chat,download,info,prune} ... [subcommands [subcommands ...]]
 
 Downloads tf2 chat from logs.tf into a db and provides search. Use
 [subcommand] -h to get information of a command
 
 positional arguments:
-  SUBCOMMAND
+  subcommands
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -45,10 +45,10 @@ optional arguments:
                         Name of sqlite db (default: chat.db)
 
 Available subcommands:
-  {chat,count,download,prune}
+  {chat,download,info,prune}
     chat
-    count
     download
+    info
     prune
 
 logging:
@@ -58,5 +58,4 @@ logging:
                         Set explicit log level
   --logfile LOGFILE     Ouput log messages to file
   --logfmt LOGFMT       Log message format
-
 ```
