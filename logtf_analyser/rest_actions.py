@@ -2,15 +2,15 @@
 from requests import get
 import logging
 
-ENDPOINT = 'https://logs.tf'
+ENDPOINT = 'https://logs.tf/api/v1'
 
 
 def get_search_url():
-    return "{}/json_search".format(ENDPOINT)
+    return "{}/log".format(ENDPOINT)
 
 
 def get_log_url(log_id):
-    return "{}/json/{}".format(ENDPOINT, log_id)
+    return "{}/log/{}".format(ENDPOINT, log_id)
 
 
 def search_logs(player=None, uploader=None, title=None, limit=1000, full_json=False):
@@ -20,10 +20,6 @@ def search_logs(player=None, uploader=None, title=None, limit=1000, full_json=Fa
     player   Player SteamID as 64-bit integer
     limit    Number of results to get (Max 1000)
     """
-
-    if not (player or uploader or title):
-        logging.critical('No params applied to search')
-        exit(2)
 
     params = {'limit': limit}
     if player:

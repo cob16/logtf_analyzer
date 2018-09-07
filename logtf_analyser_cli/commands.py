@@ -11,12 +11,12 @@ from logtf_analyser.rest_actions import search_logs, get_log
 
 URL_FILENAME = 'url'
 AUTHTOKEN_FILENAME = 'token'
-MAX_LIMIT = 1000
+MAX_LIMIT = 10000
 
 
 @begin.subcommand
 @begin.convert(limit=int, userid=int)
-def download(userid: 'Steam User Id64',
+def download(userid: 'Steam User Id64' = None,
              limit: 'Number or logs to get' = 5,
              ignore_console: 'ignore chat made by the console' = False):
     """
@@ -26,7 +26,12 @@ def download(userid: 'Steam User Id64',
         logging.critical(colored.red("Limit is set over MAX_LIMIT of {}".format(MAX_LIMIT), bold=True))
         exit(2)
 
-    logging.info("Querying latest {} logs for user {} from logs.tf...".format(limit, userid))
+    logging.info("Querying for latest {} logs from logs.tf...".format(limit))
+    if userid:
+        logging.info("- for user {} from logs.tf...".format(userid))
+    if ignore_console:
+        logging.info("- will not save console messages in chat".format(userid))
+
     with db.atomic():
         with db.savepoint() as save:
             logs = search_logs(player=userid, limit=limit)
