@@ -43,6 +43,12 @@ class integration_tests(TestCase):
         self.assertEquals(result["success"], True)
         self.assertEquals(len(result["logs"]), 0)
 
+    def test_search_offset(self):
+        result = actions.search_logs(limit=1, offset=999999999999999999999999, full_json=True)
+        self.assertEquals(result["results"], 0)
+        self.assertEquals(result["success"], True)
+        self.assertEquals(len(result["logs"]), 0)
+
     def test_get_log(self):
         result = actions.get_log(1851423)
         self.assertEquals(result["version"], 3)

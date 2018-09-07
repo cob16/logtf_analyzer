@@ -18,6 +18,7 @@ MAX_LIMIT = 10000
 @begin.convert(limit=int, userid=int)
 def download(userid: 'Steam User Id64' = None,
              limit: 'Number or logs to get' = 5,
+             offset: 'Offset search results' = None,
              ignore_console: 'ignore chat made by the console' = False):
     """
     Get chat logs of the user
@@ -34,7 +35,7 @@ def download(userid: 'Steam User Id64' = None,
 
     with db.atomic():
         with db.savepoint() as save:
-            logs = search_logs(player=userid, limit=limit)
+            logs = search_logs(player=userid, offset=offset, limit=limit)
             logging.info("Got {} results".format(len(logs)))
             logs = LogSearch().db_load(logs)
             logging.info("{} existing logs and {} new logs".format(len(logs.existing_logs), len(logs.newLogs)))
