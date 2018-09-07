@@ -1,7 +1,9 @@
 # Log.tf Analyser
 [![Build Status](https://travis-ci.org/cob16/logtf_analyzer.svg?branch=master)](https://travis-ci.org/cob16/logtf_analyzer)
 
-logtf_analyser is a cli app to download and query chat logs from [Logs.tf](https://logs.tf/).
+`logtf_analyser` is a cli app to download and query logs from [Logs.tf](https://logs.tf/).
+
+Currently, this is limited to chat logs but there are plans to add full log support.
 
 **SQLite is required**
 

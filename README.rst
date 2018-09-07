@@ -3,23 +3,26 @@ Log.tf Analyser
 
 |Build Status|
 
-logtf\_analyser is a cli app to download and query chat logs from
+``logtf_analyser`` is a cli app to download and query logs from
 `Logs.tf <https://logs.tf/>`__.
+
+Currently, this is limited to chat logs but there are plans to add full
+log support.
 
 **SQLite is required**
 
 Install
-~~~~~~~
+-------
 
 .. code:: bash
 
     pip install logtf_analyser
 
 Examples
-~~~~~~~~
+--------
 
 Download the last 12 logs of a player
-'''''''''''''''''''''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This will download and load all selected chat logs into a sql lite db.
 This will ignore any pre-existing logs.
@@ -29,7 +32,7 @@ This will ignore any pre-existing logs.
     $ logtf download -l 12 76561197960287930
 
 Get number of 'gg's
-'''''''''''''''''''
+~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
@@ -37,7 +40,7 @@ Get number of 'gg's
     12
 
 Usage
-~~~~~
+-----
 
 .. code:: bash
 
